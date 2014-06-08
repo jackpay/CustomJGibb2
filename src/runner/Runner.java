@@ -15,9 +15,9 @@ public class Runner {
 		ldaOption.inf = false;
 		ldaOption.savestep = iters;
 		//"300-rand-web-dataset.txt";
-		ldaOption.dfile =  "func-dataset.txt";
+		ldaOption.dfile =  "5000-tfidf-dataset.txt";
 		ldaOption.est = true;
-		ldaOption.K = 3;
+		ldaOption.K = 20;
 		ldaOption.niters = iters;
 		ldaOption.modelName = "newmodivfdikmlm";
 		Estimator est = new Estimator();

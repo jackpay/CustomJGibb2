@@ -29,7 +29,10 @@
 package jgibblda;
 
 import java.io.File;
-import java.util.Vector;
+
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 
 public class Estimator {
 	
@@ -79,7 +82,19 @@ public class Estimator {
 					trnModel.saveModel("model-" + Conversion.ZeroPad(trnModel.liter, 5));
 				}
 			}
-		}// end iterations		
+		}// end iterations
+		
+//		for (int m = 0; m < trnModel.M; m++){
+//			double sum = 0.0;
+//			for (int k = 0; k < trnModel.K; k++){
+//				sum += trnModel.nd[m][k];
+//			}
+//			System.out.println("Sum" + sum);
+//			for (int k = 0; k < trnModel.K; k++){
+//				System.out.println(m + " " + k +" " + trnModel.nd[m][k]);
+//				trnModel.nd[m][k] = trnModel.nd[m][k] / sum;
+//			}
+//		}
 		
 		System.out.println("Gibbs sampling completed!\n");
 		System.out.println("Saving the final model!\n");
@@ -100,7 +115,6 @@ public class Estimator {
 
 		int topic = trnModel.z[m].get(n);
 		int w = trnModel.data.docs[m].words[n];
-		int originalTopic = topic;
 		
 		trnModel.nw[w][topic] -= 1;
 		trnModel.nd[m][topic] -= 1;
@@ -119,7 +133,7 @@ public class Estimator {
 		
 		// cumulate multinomial parameters
 		for (int k = 1; k < trnModel.K; k++){
-			trnModel.p[k] += trnModel.p[k - 1];
+			trnModel.p[k] += (trnModel.p[k - 1]);
 		}
 		
 		// scaled sample because of unnormalized p[]
@@ -130,19 +144,29 @@ public class Estimator {
 				break;
 		}
 		
+		
+		
 		// add newly estimated z_i to count variables
-		if(trnModel.data.docs[m].getTfIdf(w) >= 0.01){
-			trnModel.nw[w][topic] += (1 + trnModel.data.docs[m].getTfIdf(w));
-			trnModel.nd[m][topic] += 1;
+//		if(trnModel.data.docs[m].getTfIdf(w) >= 0.01){
+//			
+//			trnModel.nw[w][startT] -= 1;
+//			trnModel.nd[m][startT] -= 1;
+//			trnModel.nwsum[startT] -= 1;
+//			trnModel.ndsum[m] -= 1;
+//			
+//			trnModel.nw[w][topic] += 1;
+//			trnModel.nd[m][topic] += 1;
+//			trnModel.nwsum[topic] += 1;
+//			trnModel.ndsum[m] += 1;
+//		}
+//		else{
+		// (1/(Math.exp(-(trnModel.data.docs[m].getTfIdf(w)))));
+		//System.err.println(Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w))) + " " + (1/(1+(Math.exp(-(trnModel.data.docs[m].getTfIdf(w))))) + " " + trnModel.data.docs[m].getTfIdf(w)) + " " + (1/Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w)))));
+			trnModel.nw[w][topic] += 1; 
+			trnModel.nd[m][topic] += (1/(Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w)))));
 			trnModel.nwsum[topic] += 1;
 			trnModel.ndsum[m] += 1;
-		}
-		else{
-			trnModel.nw[w][topic] += 1;
-			trnModel.nd[m][topic] += 1;
-			trnModel.nwsum[topic] += 1;
-			trnModel.ndsum[m] += 1;
-		}
+//		}
 		
  		return topic;
 	}
@@ -158,7 +182,6 @@ public class Estimator {
 	public void computePhi(){
 		for (int k = 0; k < trnModel.K; k++){
 			for (int w = 0; w < trnModel.V; w++){
-				System.out.println(trnModel.nw[w][k]);
 				trnModel.phi[k][w] = (trnModel.nw[w][k] + trnModel.beta) / (trnModel.nwsum[k] + trnModel.V * trnModel.beta);
 			}
 		}
