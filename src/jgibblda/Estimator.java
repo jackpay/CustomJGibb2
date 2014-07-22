@@ -127,7 +127,7 @@ public class Estimator {
 		//do multinominal sampling via cumulative method
 		// * trnModel.data.docs[m].getTfIdf(w)
 		for (int k = 0; k < trnModel.K; k++){
-			trnModel.p[k] = (trnModel.nw[w][k] + (trnModel.beta))/(trnModel.nwsum[k] + Vbeta) *
+			trnModel.p[k] = ((trnModel.nw[w][k] + (trnModel.beta))/(trnModel.nwsum[k] + Vbeta) + (1/(Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w)))))) *
 					(trnModel.nd[m][k] + trnModel.alpha)/(trnModel.ndsum[m] + Kalpha);
 		}
 		
@@ -163,7 +163,7 @@ public class Estimator {
 		// (1/(Math.exp(-(trnModel.data.docs[m].getTfIdf(w)))));
 		//System.err.println(Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w))) + " " + (1/(1+(Math.exp(-(trnModel.data.docs[m].getTfIdf(w))))) + " " + trnModel.data.docs[m].getTfIdf(w)) + " " + (1/Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w)))));
 			trnModel.nw[w][topic] += 1; 
-			trnModel.nd[m][topic] += (1/(Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w)))));
+			trnModel.nd[m][topic] += 1;//(1/(Math.exp((-1 * trnModel.data.docs[m].getTfIdf(w)))));
 			trnModel.nwsum[topic] += 1;
 			trnModel.ndsum[m] += 1;
 //		}

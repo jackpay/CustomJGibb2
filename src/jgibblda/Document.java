@@ -46,21 +46,18 @@ public class Document {
 	//Constructors
 	//----------------------------------------------------
 	public Document(){
-		System.err.println("empty");
 		words = null;
 		rawStr = "";
 		length = 0;
 	}
 	
 	public Document(int length){
-		System.err.println("length");
 		this.length = length;
 		rawStr = "";
 		words = new int[length];
 	}
 	
 	public Document(int length, int [] words){
-		System.err.println("length words");
 		this.length = length;
 		rawStr = "";
 		
@@ -71,7 +68,6 @@ public class Document {
 	}
 	
 	public Document(int length, int [] words, String rawStr){
-		System.err.println("length words string");
 		this.length = length;
 		this.rawStr = rawStr;
 		
@@ -82,7 +78,6 @@ public class Document {
 	}
 	
 	public Document(Vector<Integer> doc){
-		System.err.println("Vector");
 		this.length = doc.size();
 		rawStr = "";
 		this.words = new int[length];
@@ -92,7 +87,6 @@ public class Document {
 	}
 	
 	public Document(Vector<Integer> doc, String rawStr){
-		System.err.println("Vector String");
 		this.length = doc.size();
 		this.rawStr = rawStr;
 		this.words = new int[length];
